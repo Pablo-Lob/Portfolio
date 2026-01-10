@@ -1,6 +1,8 @@
 import {useState, useEffect} from 'react';
 import '../../styles/Desktop.css';
 import logo from '../../assets/images/kali_logo.png';
+import {fileSystem} from "../../data/fileSystem.js";
+import DesktopIcon from "./DesktopIcon.jsx";
 
 function Desktop() {
     const [date, setDate] = useState(new Date());
@@ -21,6 +23,22 @@ function Desktop() {
     const format12 = hour % 12 || 12; // Formato 12 horas
 
     const timeString = `${format12}:${minutes.toString().padStart(2, '0')} ${formatAmPm}`; // Formato HH:MM AM/PM
+
+    const [openWindows, setOpenWindows] = useState([]);
+
+    const openWindow = (fileId) => {
+        const file = fileSystem.find(f => f.id === fileId);
+
+        if (openWindow.find(w => w.id === w.id === fileId)) return;
+
+        if (file.type === 'link') {
+            window.open(file.url, '_blank');
+            return;
+        }
+
+        setOpenWindows([...openWindows, {...file, isMinimised: false}]);
+
+    };
 
     return (
         <div className="desktop-container">
@@ -82,6 +100,14 @@ function Desktop() {
             </div>
             {/* Zona escritorio */}
             <div className="desktop-content">
+                {/* Renderizacion de los iconos y elementos del escritorio */}
+                {fileSystem.map((file) => (
+                    <DesktopIcon
+                    key={file.id}
+                    file={file}
+                    onOpen={openWindow}
+                    />
+                ))}
 
             </div>
         </div>

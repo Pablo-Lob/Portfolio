@@ -9,15 +9,15 @@ function BootScreen({onLogin}) {
     useEffect(() => {
         const typeUser = setTimeout(() => {
             setUsername("visitor");
-        }, 800);
+        }, 400);
 
         const typePassword = setTimeout(() => {
             setPassword("********");
-        }, 800);
+        }, 700);
 
         const loggin = setTimeout(() => {
             onLogin();
-        }, 2500);
+        }, 1500);
 
         return () => {
             clearTimeout(typeUser);
