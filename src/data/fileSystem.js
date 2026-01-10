@@ -24,10 +24,10 @@ export const fileSystem = [
     },
     {
         id: 'cv',
-        name: 'cv.pdf',
+        name: 'CV.pdf',
         type: 'file',
         icon: iconFile,
-        content: '/files/cv.pdf',
+        content: '/files/CV Juan Pablo Lobato González.pdf',
         isOpen: true,
         isMinimised: false
     },

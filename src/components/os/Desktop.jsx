@@ -29,7 +29,7 @@ function Desktop() {
     const openWindow = (fileId) => {
         const file = fileSystem.find(f => f.id === fileId);
 
-        if (openWindow.find(w => w.id === w.id === fileId)) return;
+        if (openWindows.find(w => w.id === fileId)) return;
 
         if (file.type === 'link') {
             window.open(file.url, '_blank');
@@ -37,7 +37,16 @@ function Desktop() {
         }
 
         setOpenWindows([...openWindows, {...file, isMinimised: false}]);
+    };
 
+    const closeWindow = (id) => {
+        setOpenWindows(openWindows.filter(window => window.id !== id));
+    };
+
+    const minimizeWindow = (id) => {
+        setOpenWindows(openWindows.map(window =>
+            window.id === id ? { ...window, isMinimised: true } : window
+        ));
     };
 
     return (
@@ -109,6 +118,15 @@ function Desktop() {
                     />
                 ))}
 
+                {/* --- AQUI VA LA MAGIA: RENDERIZAR LAS VENTANAS ABIERTAS --- */}
+                {openWindows.map((window) => (
+                    <Window
+                        key={window.id}
+                        file={window}
+                        onClose={closeWindow}
+                        onMinimize={minimizeWindow}
+                    />
+                ))}
             </div>
         </div>
     );

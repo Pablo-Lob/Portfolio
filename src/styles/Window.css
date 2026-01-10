@@ -1,0 +1,88 @@
+/* src/styles/Window.css */
+
+.window-container {
+    width: 600px;
+    height: 400px;
+    background-color: #1e1e1e; /* Color de fondo oscuro */
+    border-radius: 8px 8px 0 0; /* Bordes redondeados solo arriba */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra profunda */
+    display: flex;
+    flex-direction: column;
+    position: absolute; /* Necesario para que Draggable funcione */
+    z-index: 10; /* Para estar por encima de los iconos */
+    border: 1px solid #333;
+}
+
+/* HEADER (BARRA DE TÍTULO) */
+.window-header {
+    height: 35px;
+    background-color: #2d2d2d; /* Un poco más claro que el fondo */
+    border-bottom: 1px solid #000;
+    border-radius: 7px 7px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    cursor: default;
+}
+
+.window-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e0e0e0;
+    font-size: 13px;
+    font-weight: bold;
+    user-select: none; /* No dejar seleccionar el texto del título */
+}
+
+.window-icon-small {
+    width: 16px;
+    height: 16px;
+}
+
+/* BOTONES DE CONTROL (Min, Max, Close) */
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.control-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%; /* Redondos estilo Mac/Gnome moderno o cuadrados estilo Win */
+    /* Si prefieres cuadrados, quita el border-radius */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aaa;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.control-btn:hover {
+    color: white;
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* El botón de cerrar se pone rojo al pasar el ratón */
+.control-btn.close:hover {
+    background-color: #e81123;
+    color: white;
+}
+
+/* BODY (CONTENIDO) */
+.window-body {
+    flex: 1; /* Ocupa el resto del espacio */
+    background-color: #1f2229; /* Fondo interior */
+    color: white;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.temp-content {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+}
