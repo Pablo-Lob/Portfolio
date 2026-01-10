@@ -6,7 +6,6 @@
     background-position: center;
 
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
 
@@ -34,22 +33,70 @@
     display: flex;
     align-items: center;
     height: 100%;
+    gap: 5px;
 }
 
 .logo-kali {
     height: 30px;
     width: auto;
+    margin: 0 2px 0 10px;
+    cursor: pointer;
 }
 
 .logo-kali:hover {
-
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 .separator {
     height: 20px;
     width: 2px;
     background-color: rgba(255, 255, 255, 0.2);
-    margin: 0 8px;
+    margin: 0 5px;
+}
+
+.terminal-icon {
+    width: 25px;
+    height: 25px;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1px;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 1px solid #555;
+}
+
+.terminal-icon:hover {
+    background-color: #444;
+}
+
+.workspaces {
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    margin-left: 5px;
+}
+
+.workspace-btn {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255,255,255,0.1);
+    color: #aaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.workspace-btn.active {
+    background-color: #009df9;
+    color: white;
+    font-weight: bold;
 }
 
 /* Zona derecha */
@@ -57,4 +104,6 @@
     display: flex;
     align-items: center;
     height: 100%;
+    gap: 5px;
+    padding: 0 10px
 }
