@@ -1,76 +1,113 @@
+// src/components/os/Window.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import '../../styles/Window.css';
 import { FaTimes, FaMinus, FaExpand } from "react-icons/fa";
+import { RiDragMove2Fill } from "react-icons/ri";
 
-const Window = ({ file, onClose, onMinimize }) => {
-    // 1. ESTADO PARA LA POSICIÓN (X, Y)
-    const [position, setPosition] = useState({ x: 100, y: 50 });
+const Window = ({ file, onClose, onMinimize, onMaximize }) => {
+    // 1. ESTADO DE POSICIÓN Y TAMAÑO
+    // Inicializamos con los valores del fileSystem o con valores por defecto
+    const [position, setPosition] = useState({
+        x: file.defaultX || 100,
+        y: file.defaultY || 50
+    });
+    const [size, setSize] = useState({
+        width: file.defaultWidth || 600,
+        height: file.defaultHeight || 400
+    });
+
+    // Estados de control
     const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
 
-    // Referencia para guardar la distancia entre el click y la esquina
-    const dragOffset = useRef({ x: 0, y: 0 });
+    // Referencias para cálculos matemáticos del ratón
+    const dragStart = useRef({ x: 0, y: 0 }); // Dónde hice click
+    const dimsStart = useRef({ w: 0, h: 0, x: 0, y: 0 }); // Tamaño/Pos al empezar
 
-    // 2. INICIO DEL ARRASTRE (Al hacer click en la barra)
-    const handleMouseDown = (e) => {
-        // Solo arrastramos si es botón izquierdo
-        if (e.button !== 0) return;
-
+    // --- LÓGICA DE ARRASTRAR (MOVER VENTANA) ---
+    const handleMouseDownDrag = (e) => {
+        if (file.isMaximized || e.button !== 0) return;
+        e.stopPropagation();
         setIsDragging(true);
-        // Calculamos dónde hemos pinchado relativo a la ventana
-        dragOffset.current = {
+        // Guardamos la diferencia entre el ratón y la esquina de la ventana
+        dragStart.current = {
             x: e.clientX - position.x,
             y: e.clientY - position.y
         };
-        e.stopPropagation(); // Evitar líos con otros eventos
     };
 
-    // 3. EFECTO PARA MOVER Y SOLTAR (Eventos globales)
+    // --- LÓGICA DE REDIMENSIONAR (CAMBIAR TAMAÑO) ---
+    const handleMouseDownResize = (e) => {
+        if (file.isMaximized || e.button !== 0) return;
+        e.stopPropagation();
+        setIsResizing(true);
+        // Guardamos dónde estaba el ratón y qué tamaño tenía la ventana
+        dragStart.current = { x: e.clientX, y: e.clientY };
+        dimsStart.current = { w: size.width, h: size.height };
+    };
+
+    // --- EFECTO GLOBAL PARA EL MOVIMIENTO DEL RATÓN ---
     useEffect(() => {
         const handleMouseMove = (e) => {
-            if (!isDragging) return;
+            // CASO 1: MOVIENDO LA VENTANA
+            if (isDragging) {
+                setPosition({
+                    x: e.clientX - dragStart.current.x,
+                    y: e.clientY - dragStart.current.y
+                });
+            }
+            // CASO 2: REDIMENSIONANDO LA VENTANA
+            if (isResizing) {
+                const deltaX = e.clientX - dragStart.current.x;
+                const deltaY = e.clientY - dragStart.current.y;
 
-            // Nueva posición = Ratón actual - Distancia inicial
-            setPosition({
-                x: e.clientX - dragOffset.current.x,
-                y: e.clientY - dragOffset.current.y
-            });
+                // Actualizamos tamaño (con un mínimo de seguridad de 300x200)
+                setSize({
+                    width: Math.max(300, dimsStart.current.w + deltaX),
+                    height: Math.max(200, dimsStart.current.h + deltaY)
+                });
+            }
         };
 
         const handleMouseUp = () => {
             setIsDragging(false);
+            setIsResizing(false);
         };
 
-        // Si estamos arrastrando, escuchamos el movimiento en TODA la ventana
-        if (isDragging) {
+        if (isDragging || isResizing) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
         }
 
         return () => {
-            // Limpieza vital al soltar o desmontar
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging]);
+    }, [isDragging, isResizing]);
 
-    // Si está minimizada no renderizamos nada
     if (file.isMinimised) return null;
 
+    // Calculamos estilos finales
+    const currentStyle = file.isMaximized ? {} : {
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        width: `${size.width}px`,
+        height: `${size.height}px`,
+        position: 'absolute',
+        zIndex: (isDragging || isResizing) ? 1000 : 10
+    };
+
+    // Clase CSS condicional
+    const containerClass = `window-container ${file.isMaximized ? 'maximized' : ''}`;
+
     return (
-        <div
-            className="window-container"
-            style={{
-                left: `${position.x}px`,
-                top: `${position.y}px`,
-                position: 'absolute', // Vital para que se mueva
-                zIndex: isDragging ? 1000 : 10, // Traer al frente al mover
-            }}
-        >
-            {/* BARRA DE TÍTULO (Aquí ponemos el evento de mouse down) */}
+        <div className={containerClass} style={currentStyle}>
+
+            {/* HEADER (Arrastrable) */}
             <div
                 className="window-header"
-                onMouseDown={handleMouseDown}
-                style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                onMouseDown={handleMouseDownDrag}
+                style={{ cursor: file.isMaximized ? 'default' : (isDragging ? 'grabbing' : 'grab') }}
             >
                 <div className="window-title">
                     <img src={file.icon} alt="icon" className="window-icon-small" draggable="false" />
@@ -78,35 +115,40 @@ const Window = ({ file, onClose, onMinimize }) => {
                 </div>
 
                 <div className="window-controls" onMouseDown={(e) => e.stopPropagation()}>
-                    <div className="control-btn minimize" onClick={() => onMinimize(file.id)}>
-                        <FaMinus size={10} />
-                    </div>
-                    <div className="control-btn maximize">
-                        <FaExpand size={10} />
-                    </div>
-                    <div className="control-btn close" onClick={() => onClose(file.id)}>
-                        <FaTimes size={12} />
-                    </div>
+                    <div className="control-btn minimize" onClick={() => onMinimize(file.id)}><FaMinus size={10} /></div>
+                    <div className="control-btn maximize" onClick={() => onMaximize(file.id)}><FaExpand size={10} /></div>
+                    <div className="control-btn close" onClick={() => onClose(file.id)}><FaTimes size={12} /></div>
                 </div>
             </div>
 
-            {/* CONTENIDO DEL ARCHIVO */}
-            <div className="window-body">
-                <div className="temp-content">
-                    {file.type === 'file' && file.content.endsWith('.pdf') ? (
-                        <div style={{height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                            <p>Visualizador PDF</p>
-                            <a href={file.content} target="_blank" rel="noopener noreferrer" style={{color: '#3b8eea'}}>
-                                Abrir {file.name} en pestaña nueva
-                            </a>
-                        </div>
-                    ) : (
-                        <>
-                            <h3>{file.name}</h3>
-                            <p>{file.content}</p>
-                        </>
-                    )}
-                </div>
+            {/* BODY */}
+            <div className="window-body" style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
+                {file.content.toString().endsWith('.pdf') ? (
+                    <iframe src={file.content} title="Viewer" style={{ width: '100%', height: '100%', border: 'none' }} />
+                ) : file.id === 'github' ? (
+                    <div style={{ padding: '20px', textAlign: 'center', color: '#ddd' }}>
+                        <h3>GitHub Repositories</h3>
+                        <p>Access forbidden via iframe (X-Frame-Options).</p>
+                        <a href="https://github.com/Pablo-Lob" target="_blank" rel="noreferrer" className="kali-btn">
+                            Open External Link ↗
+                        </a>
+                    </div>
+                ) : (
+                    <div className="temp-content" style={{ padding: '20px' }}>
+                        <h3>{file.name}</h3>
+                        <p>{file.content}</p>
+                    </div>
+                )}
+
+                {/* --- TIRADOR DE REDIMENSIÓN (Solo si no está maximizada) --- */}
+                {!file.isMaximized && (
+                    <div
+                        className="resize-handle"
+                        onMouseDown={handleMouseDownResize}
+                    >
+                        {/* Pequeño triangulo visual o área invisible */}
+                    </div>
+                )}
             </div>
         </div>
     );

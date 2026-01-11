@@ -29,7 +29,11 @@ export const fileSystem = [
         icon: iconFile,
         content: '/files/CV Juan Pablo Lobato González.pdf',
         isOpen: true,
-        isMinimised: false
+        isMinimised: false,
+        defaultX: 725,           // Posición X
+        defaultY: 120,           // Posición Y
+        defaultWidth: 500,      // Ancho inicial
+        defaultHeight: 800      // Alto inicial
     },
     {
         id: 'github',

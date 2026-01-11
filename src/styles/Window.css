@@ -86,3 +86,49 @@
     text-align: center;
     color: #888;
 }
+
+.window-container.maximized {
+    top: 40px !important; /* Empieza debajo de la barra de tareas */
+    left: 0 !important;
+    width: 100% !important;
+    height: calc(100% - 40px) !important; /* Resta el tamaño de la barra */
+    border-radius: 0;
+    border: none;
+    z-index: 100; /* Prioridad sobre las ventanas normales */
+    box-shadow: none;
+}
+
+.resize-handle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: se-resize; /* Cursor de flecha diagonal */
+    z-index: 20;
+
+    /* Creamos un triangulito visual usando bordes transparentes (Truco CSS) */
+    background: linear-gradient(135deg, transparent 50%, #666 50%);
+    border-bottom-right-radius: 4px; /* Coincide con el borde de la ventana si lo tuviera */
+    opacity: 0.5;
+}
+
+.resize-handle:hover {
+    opacity: 1;
+    background: linear-gradient(135deg, transparent 50%, #3b8eea 50%); /* Azul al pasar ratón */
+}
+
+/* Ajuste visual para el botón estilo Kali dentro de la ventana (opcional) */
+.kali-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 16px;
+    background: #333;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.kali-btn:hover {
+    background: #3b8eea;
+}
