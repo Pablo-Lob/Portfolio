@@ -2,7 +2,9 @@ import iconFileSystem from '../assets/icons/gnome-disks.svg';
 import iconTrash from '../assets/icons/user-trash.svg';
 import iconFile from '../assets/icons/folder-documents.svg';
 import iconGithub from '../assets/icons/github-desktop.svg';
-
+import iconTerminal from '../assets/icons/terminal.svg';
+import iconCertificates from '../assets/icons/certificates.svg';
+import iconProjects from '../assets/icons/projects.svg';
 export const fileSystem = [
     {
         id: 'fileSystem',
@@ -11,7 +13,9 @@ export const fileSystem = [
         icon: iconFileSystem,
         content: 'FileExplorer',
         isOpen: false,
-        isMinimised: false
+        isMinimised: false,
+        defaultWidth: 720,
+        defaultHeight: 480
     },
     {
         id: 'trash',
@@ -24,16 +28,53 @@ export const fileSystem = [
     },
     {
         id: 'cv',
-        name: 'CV.pdf',
+        name: 'CV',
         type: 'file',
         icon: iconFile,
-        content: '/files/CV Juan Pablo Lobato González.pdf',
+        content: 'CVViewer',
         isOpen: true,
         isMinimised: false,
-        defaultX: 725,           // Posición X
-        defaultY: 120,           // Posición Y
-        defaultWidth: 500,      // Ancho inicial
-        defaultHeight: 800      // Alto inicial
+        defaultWidth: 500,
+        defaultHeight: 820
+    },
+    {
+        id: 'projects',
+        name: 'Projects',
+        type: 'folder',
+        icon: iconProjects,
+        content: 'Projects',
+        isOpen: false,
+        isMinimised: false,
+        defaultX: 160,
+        defaultY: 60,
+        defaultWidth: 820,
+        defaultHeight: 520
+    },
+    {
+        id: 'certificates',
+        name: 'Certificates',
+        type: 'folder',
+        icon: iconCertificates,
+        content: 'Certificates',
+        isOpen: false,
+        isMinimised: false,
+        defaultX: 200,
+        defaultY: 80,
+        defaultWidth: 700,
+        defaultHeight: 480
+    },
+    {
+        id: 'terminal',
+        name: 'Terminal',
+        type: 'terminal',
+        icon: iconTerminal,
+        content: 'Terminal',
+        isOpen: false,
+        isMinimised: false,
+        defaultX: 120,
+        defaultY: 70,
+        defaultWidth: 720,
+        defaultHeight: 480
     },
     {
         id: 'github',

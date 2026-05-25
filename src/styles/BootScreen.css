@@ -15,48 +15,99 @@
     padding: 40px;
     display: flex;
     flex-direction: column;
-    width: 450px;
+    width: 480px;
 }
 
-/* Estilos para la parte superior del login */
+/* Parte superior del login */
 .loggin-top {
     background-color: rgba(38, 38, 38, 0.94);
     display: flex;
     justify-content: space-around;
-    padding: 40px 40px 0;
-    gap: 60px;
+    align-items: center;
+    padding: 36px 40px 32px;
+    gap: 40px;
     border-radius: 7px 7px 0 0;
 }
 
+/* Avatar section */
 .logo-section {
-    width: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.boot-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: block;
+}
+
+.boot-kali-mini {
+    width: 26px;
     height: auto;
+    opacity: 0.6;
 }
 
 .input-section {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    flex: 1;
 }
 
-.logo-kali {
-    width: 100px;
-    height: auto;
-    margin-bottom: 20px;
-}
-
+/* Input real (por si se usa en otro lugar) */
 .loggin-input {
     background-color: #2d2d2d;
     padding: 10px 15px;
     color: white;
     border: none;
     border-radius: 5px;
+    font-size: 14px;
 }
 
-/* Estilos para los botones de iniciar sesión y cancelar */
+/* Display div que simula el input con cursor typewriter */
+.boot-display-input {
+    display: flex;
+    align-items: center;
+    min-height: 38px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.boot-placeholder {
+    color: #555;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Cursor parpadeante */
+.boot-cursor {
+    color: #1E90FF;
+    font-weight: 300;
+    animation: boot-blink 0.8s step-end infinite;
+    margin-left: 1px;
+    line-height: 1;
+}
+
+@keyframes boot-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}
+
+/* Botones */
 .loggin-actions {
     background-color: #1a1a1a;
-    padding: 40px;
+    padding: 28px 40px;
     gap: 20px;
     display: flex;
     justify-content: space-between;
@@ -70,6 +121,7 @@
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 16px;
+    cursor: pointer;
 }
 
 .cancel-button {
@@ -79,10 +131,10 @@
     padding: 10px 20px;
     border-radius: 5px;
     font-size: 16px;
-
+    cursor: pointer;
 }
 
-/* Estilos para el texto */
+/* Texto inferior */
 .autor-container {
     margin-top: 60px;
     color: white;
@@ -93,13 +145,12 @@
     font-size: 3rem;
     letter-spacing: 7px;
     font-family: 'Segoe UI', Tahoma, sans-serif;
-
     border: 6px solid white;
     padding: 5px 10px;
     border-radius: 10px;
     margin-bottom: 10px;
-
 }
+
 .autor {
     font-size: 0.9rem;
     font-family: 'Segoe UI', Tahoma, sans-serif;

@@ -1,71 +1,81 @@
-// src/components/os/Window.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import '../../styles/Window.css';
 import { FaTimes, FaMinus, FaExpand } from "react-icons/fa";
-import { RiDragMove2Fill } from "react-icons/ri";
+import Terminal from '../apps/Terminal.jsx';
+import CVViewer from '../apps/CVViewer.jsx';
+import Certificates from '../apps/Certificates.jsx';
+import Projects from '../apps/Projects.jsx';
+import FileExplorer from '../apps/FileExplorer.jsx';
 
-const Window = ({ file, onClose, onMinimize, onMaximize }) => {
-    // 1. ESTADO DE POSICIÓN Y TAMAÑO
-    // Inicializamos con los valores del fileSystem o con valores por defecto
-    const [position, setPosition] = useState({
-        x: file.defaultX || 100,
-        y: file.defaultY || 50
+const Window = ({ file, onClose, onMinimize, onMaximize, onOpenWindow, onFocus, isActive }) => {
+    const [position, setPosition] = useState(() => {
+        const w = file.defaultWidth || 600;
+        const h = file.defaultHeight || 400;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        // Si no hay defaultX/Y, centrar en pantalla
+        const rawX = file.defaultX != null ? file.defaultX : Math.round((vw - w) / 2);
+        const rawY = file.defaultY != null ? file.defaultY : Math.round((vh - h) / 2);
+        return {
+            x: Math.max(0, Math.min(rawX, vw - w - 8)),
+            y: Math.max(40, Math.min(rawY, vh - h - 8)),
+        };
     });
     const [size, setSize] = useState({
         width: file.defaultWidth || 600,
         height: file.defaultHeight || 400
     });
 
-    // Estados de control
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
 
-    // Referencias para cálculos matemáticos del ratón
-    const dragStart = useRef({ x: 0, y: 0 }); // Dónde hice click
-    const dimsStart = useRef({ w: 0, h: 0, x: 0, y: 0 }); // Tamaño/Pos al empezar
+    const dragStart = useRef({ x: 0, y: 0 });
+    const dimsStart = useRef({ w: 0, h: 0 });
 
-    // --- LÓGICA DE ARRASTRAR (MOVER VENTANA) ---
     const handleMouseDownDrag = (e) => {
         if (file.isMaximized || e.button !== 0) return;
         e.stopPropagation();
+        onFocus?.(file.id);
         setIsDragging(true);
-        // Guardamos la diferencia entre el ratón y la esquina de la ventana
         dragStart.current = {
             x: e.clientX - position.x,
             y: e.clientY - position.y
         };
     };
 
-    // --- LÓGICA DE REDIMENSIONAR (CAMBIAR TAMAÑO) ---
     const handleMouseDownResize = (e) => {
         if (file.isMaximized || e.button !== 0) return;
         e.stopPropagation();
         setIsResizing(true);
-        // Guardamos dónde estaba el ratón y qué tamaño tenía la ventana
         dragStart.current = { x: e.clientX, y: e.clientY };
         dimsStart.current = { w: size.width, h: size.height };
     };
 
-    // --- EFECTO GLOBAL PARA EL MOVIMIENTO DEL RATÓN ---
     useEffect(() => {
         const handleMouseMove = (e) => {
-            // CASO 1: MOVIENDO LA VENTANA
             if (isDragging) {
-                setPosition({
-                    x: e.clientX - dragStart.current.x,
-                    y: e.clientY - dragStart.current.y
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
+                const rawX = e.clientX - dragStart.current.x;
+                const rawY = e.clientY - dragStart.current.y;
+                setPosition(prev => {
+                    const w = size.width;
+                    const h = size.height;
+                    return {
+                        x: Math.max(0, Math.min(rawX, vw - w)),
+                        y: Math.max(40, Math.min(rawY, vh - h)),
+                    };
                 });
             }
-            // CASO 2: REDIMENSIONANDO LA VENTANA
             if (isResizing) {
+                const vw = window.innerWidth;
+                const vh = window.innerHeight;
                 const deltaX = e.clientX - dragStart.current.x;
                 const deltaY = e.clientY - dragStart.current.y;
-
-                // Actualizamos tamaño (con un mínimo de seguridad de 300x200)
-                setSize({
-                    width: Math.max(300, dimsStart.current.w + deltaX),
-                    height: Math.max(200, dimsStart.current.h + deltaY)
-                });
+                setSize(prev => ({
+                    width:  Math.max(300, Math.min(dimsStart.current.w + deltaX, vw - position.x)),
+                    height: Math.max(200, Math.min(dimsStart.current.h + deltaY, vh - position.y)),
+                }));
             }
         };
 
@@ -87,23 +97,77 @@ const Window = ({ file, onClose, onMinimize, onMaximize }) => {
 
     if (file.isMinimised) return null;
 
-    // Calculamos estilos finales
     const currentStyle = file.isMaximized ? {} : {
         left: `${position.x}px`,
         top: `${position.y}px`,
         width: `${size.width}px`,
         height: `${size.height}px`,
         position: 'absolute',
-        zIndex: (isDragging || isResizing) ? 1000 : 10
+        zIndex: (isDragging || isResizing) ? 1000 : (isActive ? 50 : 10)
     };
 
-    // Clase CSS condicional
     const containerClass = `window-container ${file.isMaximized ? 'maximized' : ''}`;
 
-    return (
-        <div className={containerClass} style={currentStyle}>
+    const renderContent = () => {
+        const { content } = file;
 
-            {/* HEADER (Arrastrable) */}
+        if (content === 'Terminal') {
+            return <Terminal onOpenCV={() => onOpenWindow?.('cv')} />;
+        }
+
+        if (content === 'CVViewer') {
+            return <CVViewer />;
+        }
+
+        if (content === 'Certificates') {
+            return <Certificates />;
+        }
+
+        if (content === 'Projects') {
+            return <Projects />;
+        }
+
+        if (content === 'FileExplorer') {
+            return <FileExplorer />;
+        }
+
+        if (typeof content === 'string' && content.endsWith('.pdf')) {
+            return (
+                <iframe
+                    src={content}
+                    title="Viewer"
+                    style={{ width: '100%', height: '100%', border: 'none' }}
+                />
+            );
+        }
+
+        if (file.id === 'github') {
+            return (
+                <div style={{ padding: '20px', textAlign: 'center', color: '#ddd' }}>
+                    <h3>GitHub Repositories</h3>
+                    <p>Access forbidden via iframe (X-Frame-Options).</p>
+                    <a
+                        href="https://github.com/Pablo-Lob"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="kali-btn"
+                    >
+                        Open External Link ↗
+                    </a>
+                </div>
+            );
+        }
+
+        return (
+            <div className="temp-content" style={{ padding: '20px' }}>
+                <h3>{file.name}</h3>
+                <p>{content}</p>
+            </div>
+        );
+    };
+
+    return (
+        <div className={containerClass} style={currentStyle} onMouseDown={() => onFocus?.(file.id)}>
             <div
                 className="window-header"
                 onMouseDown={handleMouseDownDrag}
@@ -121,33 +185,11 @@ const Window = ({ file, onClose, onMinimize, onMaximize }) => {
                 </div>
             </div>
 
-            {/* BODY */}
             <div className="window-body" style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
-                {file.content.toString().endsWith('.pdf') ? (
-                    <iframe src={file.content} title="Viewer" style={{ width: '100%', height: '100%', border: 'none' }} />
-                ) : file.id === 'github' ? (
-                    <div style={{ padding: '20px', textAlign: 'center', color: '#ddd' }}>
-                        <h3>GitHub Repositories</h3>
-                        <p>Access forbidden via iframe (X-Frame-Options).</p>
-                        <a href="https://github.com/Pablo-Lob" target="_blank" rel="noreferrer" className="kali-btn">
-                            Open External Link ↗
-                        </a>
-                    </div>
-                ) : (
-                    <div className="temp-content" style={{ padding: '20px' }}>
-                        <h3>{file.name}</h3>
-                        <p>{file.content}</p>
-                    </div>
-                )}
+                {renderContent()}
 
-                {/* --- TIRADOR DE REDIMENSIÓN (Solo si no está maximizada) --- */}
                 {!file.isMaximized && (
-                    <div
-                        className="resize-handle"
-                        onMouseDown={handleMouseDownResize}
-                    >
-                        {/* Pequeño triangulo visual o área invisible */}
-                    </div>
+                    <div className="resize-handle" onMouseDown={handleMouseDownResize} />
                 )}
             </div>
         </div>

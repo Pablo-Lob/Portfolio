@@ -1,0 +1,135 @@
+.certs-container {
+    display: flex;
+    height: 100%;
+    background: #1f2229;
+}
+
+.certs-list {
+    width: 220px;
+    min-width: 220px;
+    border-right: 1px solid #333;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+}
+
+.cert-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.cert-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.cert-item.active {
+    background: rgba(243, 156, 18, 0.15);
+    border-left: 2px solid #f39c12;
+}
+
+.cert-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.cert-title {
+    font-size: 12px;
+    color: #e0e0e0;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.cert-title-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.cert-star {
+    color: #f1c40f;
+    flex-shrink: 0;
+}
+
+.cert-meta {
+    font-size: 10px;
+    color: #777;
+}
+
+.certs-viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.certs-viewer-header {
+    height: 32px;
+    background: #2d2d2d;
+    border-bottom: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.cert-verify-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #f39c12;
+    text-decoration: none;
+    padding: 2px 8px;
+    border: 1px solid #f39c1255;
+    border-radius: 3px;
+    transition: background 0.12s;
+}
+
+.cert-verify-btn:hover {
+    background: rgba(243, 156, 18, 0.15);
+}
+
+.certs-viewer-placeholder {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #555;
+    font-size: 13px;
+}
+
+.certs-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 14px;
+    color: #666;
+    font-size: 13px;
+}
+
+.certs-empty code {
+    background: #2a2a2a;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #f39c12;
+}

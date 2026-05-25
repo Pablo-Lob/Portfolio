@@ -1,0 +1,75 @@
+.sm-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #0d1117;
+    font-family: 'Courier New', monospace;
+    color: #c9d1d9;
+    overflow: hidden;
+}
+
+.sm-header {
+    background: #161b22;
+    border-bottom: 1px solid #21262d;
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #58a6ff;
+}
+
+.sm-uptime {
+    color: #3fb950;
+    font-size: 10px;
+}
+
+.sm-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.sm-group-title {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+}
+
+.skill-row {
+    margin-bottom: 7px;
+}
+
+.skill-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+}
+
+.skill-name {
+    font-size: 11px;
+    color: #8b949e;
+}
+
+.skill-pct {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.skill-track {
+    height: 5px;
+    background: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.skill-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
