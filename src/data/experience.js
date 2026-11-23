@@ -11,10 +11,10 @@ export const experience = [
         end: '2027-02',
         current: true,
         description: {
-            es: 'Prácticas en el área de Infraestructura, dentro del grupo I&OaaS (Infrastructure & Operations as a Service).',
-            en: 'Internship in the Infrastructure area, within the I&OaaS (Infrastructure & Operations as a Service) team.',
+            es: 'Prácticas en el grupo I&OaaS (Infrastructure & Operations as a Service). Participo en iniciativas de IA agéntica y en la gestión de la obsolescencia de CIs en la CMDB de ServiceNow. Redacto wikis técnicas para nuevas aplicaciones, mantengo artículos de la base de conocimiento (KBA) y cruzo datos de distintas bases de datos para evaluar la viabilidad de proyectos.',
+            en: 'Internship in the I&OaaS (Infrastructure & Operations as a Service) team. I contribute to agentic AI initiatives and to configuration item (CI) obsolescence management in the ServiceNow CMDB. I write technical wikis for upcoming applications, maintain knowledge base articles (KBAs) and cross-reference data from multiple databases to assess project viability.',
         },
-        tech: [],
+        tech: ['ServiceNow', 'CMDB', 'ITSM', 'Excel'],
     },
     {
         id: 'ajedrezbyn',
