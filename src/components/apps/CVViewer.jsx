@@ -1,17 +1,11 @@
 import { useMemo, useState, useEffect } from 'react';
-
-const SPANISH_LOCALES = [
-    'es', 'es-AR', 'es-BO', 'es-CL', 'es-CO', 'es-CR', 'es-CU',
-    'es-DO', 'es-EC', 'es-SV', 'es-GT', 'es-HN', 'es-MX', 'es-NI',
-    'es-PA', 'es-PY', 'es-PE', 'es-PR', 'es-ES', 'es-UY', 'es-VE',
-];
-
-function isSpanishSpeaker() {
-    const lang = navigator.language || navigator.userLanguage || '';
-    return SPANISH_LOCALES.some(l => lang.toLowerCase().startsWith(l.toLowerCase()));
-}
+import { isSpanishSpeaker } from '../../utils/lang.js';
+import { useIsMobile } from '../../hooks/useIsMobile.js';
+import '../../styles/CVViewer.css';
+import { FaExclamationTriangle, FaFilePdf, FaExternalLinkAlt, FaDownload } from 'react-icons/fa';
 
 function CVViewer() {
+    const isMobile = useIsMobile();
     const cvPath = useMemo(() => {
         return isSpanishSpeaker()
             ? '/files/cv/CV_ES.pdf'
@@ -32,7 +26,7 @@ function CVViewer() {
     if (ready === null) {
         return (
             <div style={styles.center}>
-                <span style={{ color: '#2ecc71', fontFamily: 'monospace' }}>Loading CV...</span>
+                <span style={styles.loading}>Loading CV...</span>
             </div>
         );
     }
@@ -42,8 +36,8 @@ function CVViewer() {
         return (
             <div style={styles.center}>
                 <div style={styles.box}>
-                    <p style={{ color: '#f1c40f', fontFamily: 'monospace', margin: 0 }}>
-                        ⚠ CV_{lang}.pdf not found
+                    <p style={styles.warn}>
+                        <FaExclamationTriangle size={13} /> CV_{lang}.pdf not found
                     </p>
                     <p style={styles.hint}>
                         Place your PDF at:
@@ -54,6 +48,27 @@ function CVViewer() {
                         Spanish-speaking visitors → CV_ES · Others → CV_EN
                     </p>
                 </div>
+            </div>
+        );
+    }
+
+    if (isMobile) {
+        const spanish = isSpanishSpeaker();
+        const otherPath = spanish ? '/files/cv/CV_EN.pdf' : '/files/cv/CV_ES.pdf';
+        return (
+            <div className="cv-mobile">
+                <FaFilePdf size={56} className="cv-mobile-icon" />
+                <h2 className="cv-mobile-title">{spanish ? 'Currículum Vitae' : 'Curriculum Vitae'}</h2>
+                <p className="cv-mobile-meta">{spanish ? 'PDF · Español' : 'PDF · English'}</p>
+                <a className="cv-mobile-btn cv-mobile-btn-primary" href={cvPath} target="_blank" rel="noopener noreferrer">
+                    <FaExternalLinkAlt size={14} /> {spanish ? 'Abrir PDF' : 'Open PDF'}
+                </a>
+                <a className="cv-mobile-btn" href={cvPath} download>
+                    <FaDownload size={14} /> {spanish ? 'Descargar PDF' : 'Download PDF'}
+                </a>
+                <a className="cv-mobile-link" href={otherPath} target="_blank" rel="noopener noreferrer">
+                    {spanish ? 'También disponible en inglés' : 'Also available in Spanish'}
+                </a>
             </div>
         );
     }
@@ -74,7 +89,7 @@ const styles = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#1f2229',
+        background: 'var(--bg-2)',
     },
     box: {
         display: 'flex',
@@ -82,25 +97,39 @@ const styles = {
         alignItems: 'center',
         gap: 8,
         padding: '30px 40px',
-        background: '#2a2a2a',
-        borderRadius: 8,
-        border: '1px solid #333',
+        background: 'var(--bg-3)',
+        borderRadius: 'var(--r-md)',
+        border: '1px solid var(--line)',
         textAlign: 'center',
     },
+    loading: {
+        color: 'var(--fg-2)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--t-sm)',
+    },
+    warn: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        color: 'var(--warn)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--t-sm)',
+        margin: 0,
+    },
     hint: {
-        color: '#888',
-        fontFamily: 'monospace',
-        fontSize: 12,
+        color: 'var(--fg-2)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--t-sm)',
         margin: 0,
     },
     code: {
         display: 'block',
-        background: '#1a1a1a',
-        color: '#2ecc71',
-        fontFamily: 'monospace',
-        fontSize: 12,
+        background: 'var(--bg-0)',
+        color: 'var(--accent-fg)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 'var(--t-sm)',
         padding: '4px 10px',
-        borderRadius: 4,
+        borderRadius: 'var(--r-sm)',
     },
 };
 

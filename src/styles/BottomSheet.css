@@ -1,0 +1,72 @@
+.sheet-root {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-overlay) + 1);
+    overflow: hidden;
+}
+
+.sheet-backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--glass-foot);
+}
+
+.sheet {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translateY(100%);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    border-bottom: none;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--shadow-pop);
+    will-change: transform;
+    transition: transform 300ms var(--ease-drawer);
+}
+
+.sheet-dragging {
+    transition: none;
+}
+
+.sheet-grip {
+    height: 64px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding-top: 8px;
+    touch-action: none;
+    user-select: none;
+    cursor: grab;
+}
+
+.sheet-handle {
+    width: 36px;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--line-strong);
+}
+
+.sheet-title {
+    font-size: var(--t-lg);
+    font-weight: 600;
+    color: var(--fg-1);
+    max-width: 100%;
+    padding: 0 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sheet-body {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 16px calc(24px + env(safe-area-inset-bottom));
+    -webkit-overflow-scrolling: touch;
+}

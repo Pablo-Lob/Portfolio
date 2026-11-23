@@ -5,6 +5,7 @@ import iconGithub from '../assets/icons/github-desktop.svg';
 import iconTerminal from '../assets/icons/terminal.svg';
 import iconCertificates from '../assets/icons/certificates.svg';
 import iconProjects from '../assets/icons/projects.svg';
+import iconExperience from '../assets/icons/experience.svg';
 export const fileSystem = [
     {
         id: 'fileSystem',
@@ -14,6 +15,8 @@ export const fileSystem = [
         content: 'FileExplorer',
         isOpen: false,
         isMinimised: false,
+        defaultX: 300,
+        defaultY: 190,
         defaultWidth: 720,
         defaultHeight: 480
     },
@@ -22,7 +25,7 @@ export const fileSystem = [
         name: 'Trash',
         type: 'trash',
         icon: iconTrash,
-        content: 'TrashBin',
+        content: 'La papelera está vacía.',
         isOpen: false,
         isMinimised: false
     },
@@ -34,8 +37,23 @@ export const fileSystem = [
         content: 'CVViewer',
         isOpen: true,
         isMinimised: false,
+        defaultX: 100,
+        defaultY: 56,
         defaultWidth: 500,
-        defaultHeight: 820
+        defaultHeight: 700
+    },
+    {
+        id: 'experience',
+        name: 'Experience',
+        type: 'folder',
+        icon: iconExperience,
+        content: 'Experience',
+        isOpen: false,
+        isMinimised: false,
+        defaultX: 140,
+        defaultY: 70,
+        defaultWidth: 640,
+        defaultHeight: 520
     },
     {
         id: 'projects',
@@ -45,8 +63,8 @@ export const fileSystem = [
         content: 'Projects',
         isOpen: false,
         isMinimised: false,
-        defaultX: 160,
-        defaultY: 60,
+        defaultX: 220,
+        defaultY: 130,
         defaultWidth: 820,
         defaultHeight: 520
     },
@@ -58,8 +76,8 @@ export const fileSystem = [
         content: 'Certificates',
         isOpen: false,
         isMinimised: false,
-        defaultX: 200,
-        defaultY: 80,
+        defaultX: 260,
+        defaultY: 160,
         defaultWidth: 700,
         defaultHeight: 480
     },
@@ -71,8 +89,8 @@ export const fileSystem = [
         content: 'Terminal',
         isOpen: false,
         isMinimised: false,
-        defaultX: 120,
-        defaultY: 70,
+        defaultX: 180,
+        defaultY: 100,
         defaultWidth: 720,
         defaultHeight: 480
     },

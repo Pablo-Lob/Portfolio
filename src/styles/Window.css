@@ -1,39 +1,63 @@
-/* src/styles/Window.css */
-
 .window-container {
     width: 600px;
     height: 400px;
-    background-color: #1e1e1e; /* Color de fondo oscuro */
-    border-radius: 8px 8px 0 0; /* Bordes redondeados solo arriba */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra profunda */
+    background-color: var(--bg-2);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--shadow-win);
     display: flex;
     flex-direction: column;
-    position: absolute; /* Necesario para que Draggable funcione */
-    z-index: 10; /* Para estar por encima de los iconos */
-    border: 1px solid #333;
+    position: absolute;
+    z-index: var(--z-window);
+    border: 1px solid var(--line-strong);
+    transform-origin: 50% 100%;
+    animation: window-in 180ms var(--ease-out);
+    transition:
+        opacity 160ms var(--ease-out),
+        transform 160ms var(--ease-out),
+        visibility 0s linear 0s;
 }
 
-/* HEADER (BARRA DE TÍTULO) */
+.window-container.minimised {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 160ms var(--ease-out),
+        transform 160ms var(--ease-out),
+        visibility 0s linear 160ms;
+}
+
+@keyframes window-in {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+.window-container.active {
+    box-shadow: var(--shadow-win-active);
+}
+
 .window-header {
-    height: 35px;
-    background-color: #2d2d2d; /* Un poco más claro que el fondo */
-    border-bottom: 1px solid #000;
-    border-radius: 7px 7px 0 0;
+    height: 36px;
+    background-color: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    border-radius: calc(var(--r-lg) - 1px) calc(var(--r-lg) - 1px) 0 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 10px;
     cursor: default;
+    touch-action: none;
 }
 
 .window-title {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #e0e0e0;
-    font-size: 13px;
-    font-weight: bold;
-    user-select: none; /* No dejar seleccionar el texto del título */
+    color: var(--fg-1);
+    font-size: var(--t-md);
+    font-weight: 500;
+    user-select: none;
 }
 
 .window-icon-small {
@@ -41,60 +65,53 @@
     height: 16px;
 }
 
-/* BOTONES DE CONTROL (Min, Max, Close) */
 .window-controls {
     display: flex;
-    gap: 8px;
+    gap: 6px;
 }
 
 .control-btn {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%; /* Redondos estilo Mac/Gnome moderno o cuadrados estilo Win */
-    /* Si prefieres cuadrados, quita el border-radius */
+    width: 22px;
+    height: 22px;
+    border-radius: var(--r-sm);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #aaa;
+    color: var(--fg-2);
     cursor: pointer;
-    transition: all 0.2s;
+    border: none;
+    background: transparent;
+    padding: 0;
+    transition: color 120ms var(--ease-out), background-color 120ms var(--ease-out);
 }
 
 .control-btn:hover {
-    color: white;
-    background-color: rgba(255,255,255,0.1);
+    color: var(--fg-1);
+    background-color: var(--line-strong);
 }
 
-/* El botón de cerrar se pone rojo al pasar el ratón */
 .control-btn.close:hover {
-    background-color: #e81123;
-    color: white;
+    background-color: var(--danger);
+    color: var(--bg-0);
 }
 
-/* BODY (CONTENIDO) */
 .window-body {
-    flex: 1; /* Ocupa el resto del espacio */
-    background-color: #1f2229; /* Fondo interior */
-    color: white;
+    flex: 1;
+    background-color: var(--bg-2);
+    color: var(--fg-1);
     padding: 0;
     overflow: hidden;
     position: relative;
-}
-
-.temp-content {
-    padding: 20px;
-    text-align: center;
-    color: #888;
+    container: app / inline-size;
 }
 
 .window-container.maximized {
-    top: 40px !important; /* Empieza debajo de la barra de tareas */
+    top: 40px !important;
     left: 0 !important;
     width: 100% !important;
-    height: calc(100% - 40px) !important; /* Resta el tamaño de la barra */
+    height: calc(100% - 40px) !important;
     border-radius: 0;
     border: none;
-    z-index: 100; /* Prioridad sobre las ventanas normales */
     box-shadow: none;
 }
 
@@ -104,31 +121,30 @@
     right: 0;
     width: 20px;
     height: 20px;
-    cursor: se-resize; /* Cursor de flecha diagonal */
+    cursor: se-resize;
     z-index: 20;
-
-    /* Creamos un triangulito visual usando bordes transparentes (Truco CSS) */
-    background: linear-gradient(135deg, transparent 50%, #666 50%);
-    border-bottom-right-radius: 4px; /* Coincide con el borde de la ventana si lo tuviera */
+    touch-action: none;
+    background: linear-gradient(135deg, transparent 50%, var(--fg-3) 50%);
     opacity: 0.5;
+    transition: opacity 120ms var(--ease-out);
 }
 
 .resize-handle:hover {
     opacity: 1;
-    background: linear-gradient(135deg, transparent 50%, #3b8eea 50%); /* Azul al pasar ratón */
+    background: linear-gradient(135deg, transparent 50%, var(--accent) 50%);
 }
 
-/* Ajuste visual para el botón estilo Kali dentro de la ventana (opcional) */
 .kali-btn {
     display: inline-block;
     margin-top: 10px;
     padding: 8px 16px;
-    background: #333;
-    color: white;
-    border-radius: 4px;
+    background: var(--bg-3);
+    color: var(--fg-1);
+    border-radius: var(--r-sm);
     text-decoration: none;
-    transition: background 0.2s;
+    transition: background-color 150ms var(--ease-out);
 }
+
 .kali-btn:hover {
-    background: #3b8eea;
+    background: var(--accent-strong);
 }

@@ -1,31 +1,106 @@
-/* src/index.css - BORRA TODO LO DEMÁS Y PEGA ESTO */
-
 :root {
-  /* Variables de Kali (Opcional, pero recomendado) */
-  --kali-bg: #1f2229;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  --bg-0: #0b0d12;
+  --bg-1: #12151c;
+  --bg-2: #1a1e27;
+  --bg-3: #232834;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.14);
+  --fg-1: #e8eaf0;
+  --fg-2: #a4abb9;
+  --fg-3: #8b93a4;
+  --accent: #367bf0;
+  --accent-strong: #2b69d6;
+  --accent-fg: #6b9ff5;
+  --accent-soft: rgba(54, 123, 240, 0.14);
+  --accent-line: rgba(54, 123, 240, 0.4);
+  --ok: #3fb950;
+  --ok-soft: rgba(63, 185, 80, 0.14);
+  --warn: #d4a72c;
+  --danger: #e5534b;
+  --danger-soft: rgba(229, 83, 75, 0.16);
+  --hover: rgba(255, 255, 255, 0.06);
+  --glass: rgba(18, 21, 28, 0.82);
+  --glass-bar: rgba(18, 21, 28, 0.8);
+  --glass-card: rgba(26, 30, 39, 0.94);
+  --glass-foot: rgba(11, 13, 18, 0.94);
+  --on-accent: #ffffff;
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-win-active: 0 14px 40px rgba(0, 0, 0, 0.6);
+  --shadow-avatar: 0 0 20px rgba(0, 0, 0, 0.5);
+  --text-shadow-lg: 0 2px 12px rgba(0, 0, 0, 0.6);
+  --text-shadow-md: 0 1px 6px rgba(0, 0, 0, 0.7);
+  --text-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.8);
+
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --shadow-win: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  --z-desktop: 1;
+  --z-window: 10;
+  --z-window-active: 50;
+  --z-taskbar: 100;
+  --z-popover: 200;
+  --z-overlay: 300;
+
+  --t-xs: 11px;
+  --t-sm: 12px;
+  --t-md: 13px;
+  --t-base: 14px;
+  --t-lg: 16px;
+  --t-xl: 20px;
+  --t-2xl: 28px;
+
+  --font-ui: 'Geist', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
+
+  font-family: var(--font-ui);
+  font-size: var(--t-base);
+  color: var(--fg-1);
   color-scheme: dark;
 }
 
-/* 1. RESET DE CSS: Quitamos márgenes a todo */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 2. FORZAMOS PANTALLA COMPLETA */
 html, body {
   width: 100%;
-  height: 100%; /* Esto es vital */
-  background-color: #000;
-  overflow: hidden; /* Evita barras de scroll */
+  height: 100%;
+  background-color: var(--bg-0);
+  overflow: hidden;
 }
 
-/* 3. ¡MUY IMPORTANTE! Hacemos que la raíz de React también ocupe todo */
 #root {
   width: 100%;
   height: 100%;
-  /* Quitamos el display: flex que te estaba centrando la web */
   display: block;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }

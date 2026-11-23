@@ -1,7 +1,7 @@
 .desktop-content {
     width: 100%;
     height: calc(100vh - 40px);
-    margin-top: 30px; /* Respoetamos la barra de tareas */
+    margin-top: 30px;
     padding: 40px;
     gap: 20px;
 
@@ -12,21 +12,31 @@
 }
 
 .desktop-icon {
+    background: none;
+    color: var(--fg-1);
+    font-family: inherit;
+    display: block;
     width: 80px;
-    font-size: 25px;
 
     cursor: pointer;
     border: 1px solid transparent;
-    border-radius: 4px;
-    padding: 5px;
-    transition: background-color 0.1s;
+    border-radius: var(--r-md);
+    padding: 6px 4px;
+    transition: background-color 150ms var(--ease-out), border-color 150ms var(--ease-out), transform 100ms var(--ease-out);
+}
 
+.desktop-icon:hover {
+    background-color: var(--accent-soft);
+    border-color: var(--accent-line);
+}
+
+.desktop-icon:active {
+    transform: scale(0.96);
 }
 
 .icon-img-container {
     display: flex;
     justify-content: center;
-    transition: transform 0.2s ease;
 }
 
 .icon-img {
@@ -34,15 +44,10 @@
     height: 40px;
 }
 
-
-.icon-img-container:hover {
-    transform: scale(1.2);
-    font-size: 30px;
-
-}
-
 .icon-name {
-    font-size: 12px;
+    font-size: var(--t-sm);
     display: flex;
     justify-content: center;
+    margin-top: 4px;
+    text-shadow: var(--text-shadow-sm);
 }

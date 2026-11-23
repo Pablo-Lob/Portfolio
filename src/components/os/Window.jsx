@@ -1,195 +1,142 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../../styles/Window.css';
+import AppContent from '../apps/AppContent.jsx';
 import { FaTimes, FaMinus, FaExpand } from "react-icons/fa";
-import Terminal from '../apps/Terminal.jsx';
-import CVViewer from '../apps/CVViewer.jsx';
-import Certificates from '../apps/Certificates.jsx';
-import Projects from '../apps/Projects.jsx';
-import FileExplorer from '../apps/FileExplorer.jsx';
 
-const Window = ({ file, onClose, onMinimize, onMaximize, onOpenWindow, onFocus, isActive }) => {
-    const [position, setPosition] = useState(() => {
-        const w = file.defaultWidth || 600;
-        const h = file.defaultHeight || 400;
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        // Si no hay defaultX/Y, centrar en pantalla
-        const rawX = file.defaultX != null ? file.defaultX : Math.round((vw - w) / 2);
-        const rawY = file.defaultY != null ? file.defaultY : Math.round((vh - h) / 2);
-        return {
-            x: Math.max(0, Math.min(rawX, vw - w - 8)),
-            y: Math.max(40, Math.min(rawY, vh - h - 8)),
-        };
+const TASKBAR_HEIGHT = 40;
+const MIN_WIDTH = 300;
+const MIN_HEIGHT = 200;
+const BASE_Z = 10;
+
+function clampFrame({ x, y, width, height }) {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const w = Math.min(width, vw);
+    const h = Math.min(height, vh - TASKBAR_HEIGHT);
+    return {
+        width: w,
+        height: h,
+        x: Math.max(0, Math.min(x, vw - w)),
+        y: Math.max(TASKBAR_HEIGHT, Math.min(y, vh - h)),
+    };
+}
+
+function initialFrame(file) {
+    const width = file.defaultWidth || 600;
+    const height = file.defaultHeight || 400;
+    return clampFrame({
+        width,
+        height,
+        x: file.defaultX != null ? file.defaultX : Math.round((window.innerWidth - width) / 2),
+        y: file.defaultY != null ? file.defaultY : Math.round((window.innerHeight - height) / 2),
     });
-    const [size, setSize] = useState({
-        width: file.defaultWidth || 600,
-        height: file.defaultHeight || 400
-    });
+}
 
-    const [isDragging, setIsDragging] = useState(false);
-    const [isResizing, setIsResizing] = useState(false);
+const Window = ({ file, onClose, onMinimize, onMaximize, onOpenWindow, onFocus, isActive, order }) => {
+    const [frame, setFrame] = useState(() => initialFrame(file));
+    const [interaction, setInteraction] = useState(null);
+    const gesture = useRef(null);
 
-    const dragStart = useRef({ x: 0, y: 0 });
-    const dimsStart = useRef({ w: 0, h: 0 });
+    useEffect(() => {
+        const refit = () => setFrame(prev => clampFrame(prev));
+        window.addEventListener('resize', refit);
+        return () => window.removeEventListener('resize', refit);
+    }, []);
 
-    const handleMouseDownDrag = (e) => {
+    const beginGesture = (mode) => (e) => {
         if (file.isMaximized || e.button !== 0) return;
         e.stopPropagation();
         onFocus?.(file.id);
-        setIsDragging(true);
-        dragStart.current = {
-            x: e.clientX - position.x,
-            y: e.clientY - position.y
-        };
+        e.currentTarget.setPointerCapture(e.pointerId);
+        gesture.current = { mode, startX: e.clientX, startY: e.clientY, origin: frame };
+        setInteraction(mode);
     };
 
-    const handleMouseDownResize = (e) => {
-        if (file.isMaximized || e.button !== 0) return;
-        e.stopPropagation();
-        setIsResizing(true);
-        dragStart.current = { x: e.clientX, y: e.clientY };
-        dimsStart.current = { w: size.width, h: size.height };
+    const moveGesture = (e) => {
+        const g = gesture.current;
+        if (!g) return;
+        const dx = e.clientX - g.startX;
+        const dy = e.clientY - g.startY;
+        if (g.mode === 'drag') {
+            setFrame(clampFrame({ ...g.origin, x: g.origin.x + dx, y: g.origin.y + dy }));
+        } else {
+            const maxWidth = window.innerWidth - g.origin.x;
+            const maxHeight = window.innerHeight - g.origin.y;
+            setFrame({
+                ...g.origin,
+                width: Math.max(MIN_WIDTH, Math.min(g.origin.width + dx, maxWidth)),
+                height: Math.max(MIN_HEIGHT, Math.min(g.origin.height + dy, maxHeight)),
+            });
+        }
     };
 
-    useEffect(() => {
-        const handleMouseMove = (e) => {
-            if (isDragging) {
-                const vw = window.innerWidth;
-                const vh = window.innerHeight;
-                const rawX = e.clientX - dragStart.current.x;
-                const rawY = e.clientY - dragStart.current.y;
-                setPosition(prev => {
-                    const w = size.width;
-                    const h = size.height;
-                    return {
-                        x: Math.max(0, Math.min(rawX, vw - w)),
-                        y: Math.max(40, Math.min(rawY, vh - h)),
-                    };
-                });
-            }
-            if (isResizing) {
-                const vw = window.innerWidth;
-                const vh = window.innerHeight;
-                const deltaX = e.clientX - dragStart.current.x;
-                const deltaY = e.clientY - dragStart.current.y;
-                setSize(prev => ({
-                    width:  Math.max(300, Math.min(dimsStart.current.w + deltaX, vw - position.x)),
-                    height: Math.max(200, Math.min(dimsStart.current.h + deltaY, vh - position.y)),
-                }));
-            }
-        };
-
-        const handleMouseUp = () => {
-            setIsDragging(false);
-            setIsResizing(false);
-        };
-
-        if (isDragging || isResizing) {
-            window.addEventListener('mousemove', handleMouseMove);
-            window.addEventListener('mouseup', handleMouseUp);
-        }
-
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, [isDragging, isResizing]);
-
-    if (file.isMinimised) return null;
-
-    const currentStyle = file.isMaximized ? {} : {
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        width: `${size.width}px`,
-        height: `${size.height}px`,
-        position: 'absolute',
-        zIndex: (isDragging || isResizing) ? 1000 : (isActive ? 50 : 10)
+    const endGesture = () => {
+        gesture.current = null;
+        setInteraction(null);
     };
 
-    const containerClass = `window-container ${file.isMaximized ? 'maximized' : ''}`;
-
-    const renderContent = () => {
-        const { content } = file;
-
-        if (content === 'Terminal') {
-            return <Terminal onOpenCV={() => onOpenWindow?.('cv')} />;
-        }
-
-        if (content === 'CVViewer') {
-            return <CVViewer />;
-        }
-
-        if (content === 'Certificates') {
-            return <Certificates />;
-        }
-
-        if (content === 'Projects') {
-            return <Projects />;
-        }
-
-        if (content === 'FileExplorer') {
-            return <FileExplorer />;
-        }
-
-        if (typeof content === 'string' && content.endsWith('.pdf')) {
-            return (
-                <iframe
-                    src={content}
-                    title="Viewer"
-                    style={{ width: '100%', height: '100%', border: 'none' }}
-                />
-            );
-        }
-
-        if (file.id === 'github') {
-            return (
-                <div style={{ padding: '20px', textAlign: 'center', color: '#ddd' }}>
-                    <h3>GitHub Repositories</h3>
-                    <p>Access forbidden via iframe (X-Frame-Options).</p>
-                    <a
-                        href="https://github.com/Pablo-Lob"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="kali-btn"
-                    >
-                        Open External Link ↗
-                    </a>
-                </div>
-            );
-        }
-
-        return (
-            <div className="temp-content" style={{ padding: '20px' }}>
-                <h3>{file.name}</h3>
-                <p>{content}</p>
-            </div>
-        );
+    const handleKeyDown = (e) => {
+        if (e.key !== 'Escape') return;
+        const tag = e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        onClose(file.id);
     };
+
+    const currentStyle = file.isMaximized
+        ? { zIndex: BASE_Z + order }
+        : {
+            left: `${frame.x}px`,
+            top: `${frame.y}px`,
+            width: `${frame.width}px`,
+            height: `${frame.height}px`,
+            position: 'absolute',
+            zIndex: BASE_Z + order,
+        };
+
+    const containerClass = `window-container${file.isMaximized ? ' maximized' : ''}${isActive ? ' active' : ''}${file.isMinimised ? ' minimised' : ''}`;
 
     return (
-        <div className={containerClass} style={currentStyle} onMouseDown={() => onFocus?.(file.id)}>
+        <div
+            className={containerClass}
+            style={currentStyle}
+            role="dialog"
+            aria-hidden={file.isMinimised || undefined}
+            aria-label={file.name}
+            tabIndex={-1}
+            onPointerDown={() => onFocus?.(file.id)}
+            onKeyDown={handleKeyDown}
+        >
             <div
                 className="window-header"
-                onMouseDown={handleMouseDownDrag}
-                style={{ cursor: file.isMaximized ? 'default' : (isDragging ? 'grabbing' : 'grab') }}
+                onPointerDown={beginGesture('drag')}
+                onPointerMove={moveGesture}
+                onPointerUp={endGesture}
+                onPointerCancel={endGesture}
+                style={{ cursor: file.isMaximized ? 'default' : (interaction === 'drag' ? 'grabbing' : 'grab') }}
             >
                 <div className="window-title">
-                    <img src={file.icon} alt="icon" className="window-icon-small" draggable="false" />
+                    <img src={file.icon} alt="" className="window-icon-small" draggable="false" />
                     <span>{file.name}</span>
                 </div>
 
-                <div className="window-controls" onMouseDown={(e) => e.stopPropagation()}>
-                    <div className="control-btn minimize" onClick={() => onMinimize(file.id)}><FaMinus size={10} /></div>
-                    <div className="control-btn maximize" onClick={() => onMaximize(file.id)}><FaExpand size={10} /></div>
-                    <div className="control-btn close" onClick={() => onClose(file.id)}><FaTimes size={12} /></div>
+                <div className="window-controls" onPointerDown={(e) => e.stopPropagation()}>
+                    <button type="button" className="control-btn minimize" aria-label={`Minimize ${file.name}`} onClick={() => onMinimize(file.id)}><FaMinus size={10} /></button>
+                    <button type="button" className="control-btn maximize" aria-label={`Maximize ${file.name}`} onClick={() => onMaximize(file.id)}><FaExpand size={10} /></button>
+                    <button type="button" className="control-btn close" aria-label={`Close ${file.name}`} onClick={() => onClose(file.id)}><FaTimes size={12} /></button>
                 </div>
             </div>
 
             <div className="window-body" style={{ padding: 0, overflow: 'hidden', position: 'relative' }}>
-                {renderContent()}
+                <AppContent file={file} onOpenApp={onOpenWindow} />
 
                 {!file.isMaximized && (
-                    <div className="resize-handle" onMouseDown={handleMouseDownResize} />
+                    <div
+                        className="resize-handle"
+                        onPointerDown={beginGesture('resize')}
+                        onPointerMove={moveGesture}
+                        onPointerUp={endGesture}
+                        onPointerCancel={endGesture}
+                    />
                 )}
             </div>
         </div>

@@ -1,0 +1,101 @@
+.app-screen {
+    position: fixed;
+    top: var(--vvt, 0px);
+    left: 0;
+    right: 0;
+    height: var(--vvh, 100dvh);
+    z-index: var(--z-overlay);
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-1);
+    color: var(--fg-1);
+    transform-origin: var(--ox, 50%) var(--oy, 100%);
+    animation: app-open 280ms var(--ease-drawer) backwards;
+    transition: transform 200ms var(--ease-drawer);
+    will-change: transform;
+}
+
+.app-screen-dragging {
+    animation: none;
+    transition: none;
+}
+
+.app-screen-leaving {
+    animation: app-close 220ms var(--ease-out) forwards;
+}
+
+.app-screen-leaving[data-drag='true'] {
+    animation: app-slide-out 220ms var(--ease-out) forwards;
+}
+
+@keyframes app-open {
+    from { opacity: 0; transform: scale(0.3); border-radius: var(--r-lg); }
+    to   { opacity: 1; transform: scale(1); border-radius: 0; }
+}
+
+@keyframes app-close {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.3); }
+}
+
+@keyframes app-slide-out {
+    from { opacity: 1; transform: translateY(var(--drag-y, 0px)); }
+    to   { opacity: 0; transform: translateY(100%); }
+}
+
+.app-screen-header {
+    flex-shrink: 0;
+    height: calc(48px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) calc(8px + env(safe-area-inset-right)) 0 calc(4px + env(safe-area-inset-left));
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-3);
+    border-bottom: 1px solid var(--line);
+    touch-action: none;
+    user-select: none;
+}
+
+.app-screen-back {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    border-radius: var(--r-md);
+    color: var(--fg-1);
+    cursor: pointer;
+    transition: background-color 120ms var(--ease-out), transform 100ms var(--ease-out);
+}
+
+.app-screen-back:active {
+    background: var(--line-strong);
+    transform: scale(0.94);
+}
+
+.app-screen-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.app-screen-title {
+    font-size: var(--t-lg);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.app-screen-body {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-2);
+    padding-bottom: env(safe-area-inset-bottom);
+    container: app / inline-size;
+}

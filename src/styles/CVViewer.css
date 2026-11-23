@@ -1,0 +1,67 @@
+.cv-mobile {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px 24px;
+    background: var(--bg-2);
+    text-align: center;
+}
+
+.cv-mobile-icon {
+    color: var(--accent-fg);
+    margin-bottom: 4px;
+}
+
+.cv-mobile-title {
+    font-size: var(--t-xl);
+    font-weight: 600;
+    color: var(--fg-1);
+}
+
+.cv-mobile-meta {
+    font-size: var(--t-sm);
+    color: var(--fg-3);
+    font-family: var(--font-mono);
+    margin-bottom: 8px;
+}
+
+.cv-mobile-btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--bg-3);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-md);
+    color: var(--fg-1);
+    font-size: var(--t-base);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 150ms var(--ease-out), transform 100ms var(--ease-out);
+}
+
+.cv-mobile-btn:active {
+    transform: scale(0.97);
+}
+
+.cv-mobile-btn-primary {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: var(--on-accent);
+}
+
+.cv-mobile-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    color: var(--accent-fg);
+    font-size: var(--t-sm);
+}

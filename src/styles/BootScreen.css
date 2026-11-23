@@ -1,5 +1,6 @@
 .bootscreen-container {
-    background-image: url('../assets/images/fondo_login.png');
+    background-color: var(--bg-1);
+    background-image: url('../assets/images/fondo_login.webp');
     width: 100%;
     height: 100%;
     background-size: cover;
@@ -16,20 +17,19 @@
     display: flex;
     flex-direction: column;
     width: 480px;
+    max-width: 100%;
 }
 
-/* Parte superior del login */
 .loggin-top {
-    background-color: rgba(38, 38, 38, 0.94);
+    background-color: var(--glass-card);
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 36px 40px 32px;
     gap: 40px;
-    border-radius: 7px 7px 0 0;
+    border-radius: var(--r-md) var(--r-md) 0 0;
 }
 
-/* Avatar section */
 .logo-section {
     display: flex;
     flex-direction: column;
@@ -45,8 +45,8 @@
     border-radius: 50%;
     object-fit: cover;
     object-position: top;
-    border: 3px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    border: 3px solid var(--line-strong);
+    box-shadow: var(--shadow-avatar);
     display: block;
 }
 
@@ -59,40 +59,36 @@
 .input-section {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
     flex: 1;
 }
 
-/* Input real (por si se usa en otro lugar) */
 .loggin-input {
-    background-color: #2d2d2d;
-    padding: 10px 15px;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
+    background-color: var(--bg-3);
+    padding: 10px 14px;
+    color: var(--fg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    font-size: var(--t-base);
 }
 
-/* Display div que simula el input con cursor typewriter */
 .boot-display-input {
     display: flex;
     align-items: center;
-    min-height: 38px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
+    min-height: 40px;
+    font-family: var(--font-mono);
+    font-size: var(--t-base);
     letter-spacing: 0.5px;
 }
 
 .boot-placeholder {
-    color: #555;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    font-size: 13px;
-    font-style: italic;
+    color: var(--fg-3);
+    font-family: var(--font-ui);
+    font-size: var(--t-md);
 }
 
-/* Cursor parpadeante */
 .boot-cursor {
-    color: #1E90FF;
+    color: var(--accent-fg);
     font-weight: 300;
     animation: boot-blink 0.8s step-end infinite;
     margin-left: 1px;
@@ -104,55 +100,84 @@
     50%       { opacity: 0; }
 }
 
-/* Botones */
 .loggin-actions {
-    background-color: #1a1a1a;
-    padding: 28px 40px;
+    background-color: var(--glass-foot);
+    padding: 24px 40px;
     gap: 20px;
     display: flex;
     justify-content: space-between;
-    border-radius: 0 0 7px 7px;
+    border-radius: 0 0 var(--r-md) var(--r-md);
+}
+
+.loggin-button,
+.cancel-button {
+    color: var(--on-accent);
+    border: none;
+    padding: 10px 20px;
+    border-radius: var(--r-md);
+    font-size: var(--t-base);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-out), transform 100ms var(--ease-out);
 }
 
 .loggin-button {
-    background-color: #1E90FF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+    background-color: var(--accent-strong);
+}
+
+.loggin-button:hover {
+    background-color: var(--accent);
 }
 
 .cancel-button {
-    background-color: black;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+    background-color: var(--bg-3);
+    color: var(--fg-1);
 }
 
-/* Texto inferior */
+.cancel-button:hover {
+    background-color: var(--line-strong);
+}
+
+.loggin-button:active,
+.cancel-button:active {
+    transform: scale(0.97);
+}
+
 .autor-container {
-    margin-top: 60px;
-    color: white;
+    margin-top: 48px;
+    color: var(--fg-1);
     text-align: center;
+    padding: 0 16px;
 }
 
 .portfolio {
-    font-size: 3rem;
-    letter-spacing: 7px;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    border: 6px solid white;
-    padding: 5px 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    font-size: var(--t-2xl);
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    text-shadow: var(--text-shadow-lg);
 }
 
 .autor {
-    font-size: 0.9rem;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    letter-spacing: 3px;
+    font-size: var(--t-sm);
+    font-family: var(--font-mono);
+    color: var(--fg-2);
+    text-shadow: var(--text-shadow-md);
+}
+
+.boot-resume {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 8px 14px;
+    background: var(--accent-strong);
+    border-radius: var(--r-md);
+    color: var(--on-accent);
+    font-size: var(--t-md);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.boot-resume:hover {
+    background: var(--accent);
 }
